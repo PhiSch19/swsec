@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Password Generator</title>
+</head>
+<body>
+<h1>Password Generator</h1>
+
+<label for="numPasswords">Number of Passwords (max 10):</label>
+<input type="number" id="numPasswords" min="1" max="10">
+<button onclick="generatePasswords()">Generate Passwords</button>
+
+<div id="passwordsContainer"></div>
+
+<script>
+    function generatePasswords() {
+        const numPasswords = document.getElementById('numPasswords').value;
+        if (numPasswords > 0 && numPasswords <= 10) {
+            fetch(`http://localhost:8081/pw/generate?count=${numPasswords}`)
+                .then(response => response.json())
+                .then(data => displayPasswords(data))
+                .catch(error => console.error('Error:', error));
+        } else {
+            alert('Please enter a number between 1 and 10.');
+        }
+    }
+
+    function displayPasswords(passwords) {
+        const passwordsContainer = document.getElementById('passwordsContainer');
+        passwordsContainer.innerHTML = '<h2>Generated Passwords:</h2>';
+        passwords.forEach(password => {
+            const passwordElement = document.createElement('p');
+            passwordElement.textContent = password;
+            passwordsContainer.appendChild(passwordElement);
+        });
+    }
+</script>
+</body>
+</html>
